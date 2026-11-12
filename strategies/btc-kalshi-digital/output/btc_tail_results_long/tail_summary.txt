@@ -1,0 +1,44 @@
+Loaded 36093 observations over 815 expiry days (2024-07-05 -> 2026-11-11)
+
+All modes reported from 2025-07-18 (first day any mode traded)
+
+PORTFOLIO (worst-case cap): 402 trades over 237 of 481 days (cap 3.0% of $1,000 = $30.00)
+  sell YES 3h: n= 137  contracts=  3638  pnl=$+57.22  hit=0.000
+  sell YES 6h: n=  74  contracts=  2287  pnl=$-28.91  hit=0.054
+  buy YES  3h: n=  42  contracts=   811  pnl=$-22.30  hit=0.952
+  buy YES  6h: n= 149  contracts=  4508  pnl=$+46.60  hit=0.993
+  mean daily return +0.011% [95% CI -0.023%, +0.041%], sd 0.369%
+  cumulative return +5.261%, max drawdown -5.454%, worst traded day -3.027%
+  max assumed worst case 2.995% of bankroll, max realized worst case 3.141%, breaches (realized worst past cap) 24
+  mean capital deployed incl. fees $22.81 per day [95% CI $20.57, $25.10]
+  325 of 402 trades sized at the 1c/99c clip (slippage buffer inactive there)
+  first half mean daily +0.006% | second half +0.016% (not an out-of-sample test)
+
+B1 one contract per signal: 988 trades over 237 of 481 days (cap 3.0% of $1,000 = $30.00)
+  sell YES 3h: n= 322  contracts=   322  pnl=$+0.44  hit=0.006
+  sell YES 6h: n= 133  contracts=   133  pnl=$-1.36  hit=0.030
+  buy YES  3h: n= 188  contracts=   188  pnl=$-1.26  hit=0.979
+  buy YES  6h: n= 345  contracts=   345  pnl=$+2.03  hit=0.997
+  mean daily return -0.000% [95% CI -0.002%, +0.001%], sd 0.019%
+  cumulative return -0.015%, max drawdown -0.296%, worst traded day -0.296%
+  max assumed worst case 1.000% of bankroll, max realized worst case 1.000%, breaches (realized worst past cap) 0
+  mean capital deployed incl. fees $2.03 per day [95% CI $1.77, $2.30]
+  872 of 988 trades sized at the 1c/99c clip (slippage buffer inactive there)
+  first half mean daily +0.000% | second half -0.000% (not an out-of-sample test)
+
+B2 per-trade cap: 988 trades over 237 of 481 days (cap 3.0% of $1,000 = $30.00)
+  sell YES 3h: n= 322  contracts=  9700  pnl=$+97.31  hit=0.006
+  sell YES 6h: n= 133  contracts=  4057  pnl=$-9.30  hit=0.030
+  buy YES  3h: n= 188  contracts=  5700  pnl=$+10.46  hit=0.979
+  buy YES  6h: n= 345  contracts= 10350  pnl=$+149.52  hit=0.997
+  mean daily return +0.052% [95% CI -0.009%, +0.098%], sd 0.591%
+  cumulative return +24.799%, max drawdown -8.850%, worst traded day -8.850%
+  max assumed worst case 29.703% of bankroll, max realized worst case 29.703%, breaches (realized worst past cap) 189
+  mean capital deployed incl. fees $60.75 per day [95% CI $53.01, $68.87]
+  872 of 988 trades sized at the 1c/99c clip (slippage buffer inactive there)
+  first half mean daily +0.007% | second half +0.096% (not an out-of-sample test)
+
+Worst expiry day vs the cap:
+  PORTFOLIO (worst-case cap)   worst traded day -3.027% of bankroll, days with realized worst case past cap: 24
+  B1 one contract per signal   worst traded day -0.296% of bankroll, days with realized worst case past cap: 0
+  B2 per-trade cap             worst traded day -8.850% of bankroll, days with realized worst case past cap: 189
