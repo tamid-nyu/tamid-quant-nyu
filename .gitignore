@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+strategies/btc-kalshi-digital/output/btc_pm/
+strategies/kalshi-multi-tail/output/raw/
+strategies/kalshi-multi-tail/output/obs/
+.pytest_cache/

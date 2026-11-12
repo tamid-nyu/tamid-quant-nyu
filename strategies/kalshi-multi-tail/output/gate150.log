@@ -1,0 +1,75 @@
+GOLD: skipped (no observations or fewer than 150 expiry days)
+WTI: skipped (no observations or fewer than 150 expiry days)
+NATGAS: skipped (no observations or fewer than 150 expiry days)
+Multi-market tail strategy: markets BTC, SPX; 52685 observations, 816 days (2024-07-05 -> 2026-11-11)
+bankroll $1,000; per-market cap c = 3.0%, k = 2, k-worst cap C = 4.0%; Sharpe = mean/sd of daily returns x sqrt(365), days without trades count as 0
+obs per market: BTC 36093 (2024-07-05 -> 2026-11-11), SPX 16592 (2025-02-18 -> 2026-11-11)
+
+=== CHECK PERIOD 2026-01-01 -> 2026-06-30 ===
+model                     | Sharpe [95% CI]          diff vs BTC [95% CI]   | return  maxDD  worst | trades wins/d days/wk | max all-mkt worst  breaches c/C
+S multi                   | -0.19 [-2.39,  4.08]   -0.48 [-6.38, +0.66] |  -0.84%  -5.40%  -3.01% |   155   0.83   4.02 |          4.00%     6/0  
+P multi                   |  3.81 [ 1.15,  8.81]   +3.52 [-4.43, +7.64] | +16.84%  -2.92%  -2.92% |   376   2.04   6.07 |          4.02%    15/3  
+option 1 (S, total 6%)    | -0.09 [-2.32,  4.22]   -0.38 [-6.21, +0.75] |  -0.40%  -5.40%  -3.01% |   155   0.83   4.02 |          5.95%     6/0  
+S k=1 C=3%                | -0.09 [-2.32,  4.22]   -0.38 [-6.21, +0.75] |  -0.40%  -5.40%  -3.01% |   155   0.83   4.02 |          5.95%     6/6  
+P k=1 C=3%                |  4.23 [ 1.41,  9.07]   +3.94 [-3.32, +7.18] | +21.83%  -2.92%  -2.92% |   368   1.99   6.07 |          5.99%    20/20 
+S k=3 C=5%                | -0.14 [-2.36,  4.17]   -0.43 [-6.31, +0.72] |  -0.61%  -5.40%  -3.01% |   155   0.83   4.02 |          4.99%     6/0  
+P k=3 C=5%                |  4.18 [ 1.47,  9.13]   +3.88 [-3.72, +7.46] | +19.71%  -2.92%  -2.92% |   377   2.05   6.07 |          5.09%    16/8  
+BTC only (Model 0)        |  0.29 [-1.95, 10.11]   +0.00 [+0.00, +0.00] |  +1.11%  -5.45%  -3.01% |   146   0.78   3.94 |          3.05%     6/6  
+
+=== HOLDOUT (headline) 2026-07-01 -> 2026-11-11 ===
+model                     | Sharpe [95% CI]          diff vs BTC [95% CI]   | return  maxDD  worst | trades wins/d days/wk | max all-mkt worst  breaches c/C
+S multi                   |  0.86 [-2.16,  7.26]   -0.21 [-2.55, +0.87] |  +3.37%  -4.85%  -3.03% |   274   1.96   6.95 |          4.02%    20/1  
+P multi                   |  1.24 [-1.83,  6.57]   +0.17 [-5.07, +3.57] |  +5.98%  -6.68%  -3.03% |   361   2.56   6.95 |          4.03%    31/4  
+option 1 (S, total 6%)    |  1.23 [-1.90,  7.90]   +0.16 [-2.09, +1.38] |  +4.83%  -4.19%  -3.03% |   276   1.99   6.95 |          6.04%    21/1  
+S k=1 C=3%                |  1.03 [-2.04,  7.41]   -0.04 [-2.26, +1.10] |  +4.03%  -4.88%  -3.03% |   266   1.91   6.95 |          6.04%    21/21 
+P k=1 C=3%                |  1.07 [-2.01,  6.13]   -0.00 [-4.86, +2.72] |  +5.46%  -6.64%  -3.03% |   318   2.28   6.95 |          6.07%    38/38 
+S k=3 C=5%                |  1.06 [-2.02,  7.60]   -0.01 [-2.27, +1.14] |  +4.15%  -4.49%  -3.03% |   277   1.99   6.95 |          5.05%    20/1  
+P k=3 C=5%                |  1.46 [-1.68,  6.72]   +0.39 [-4.54, +3.42] |  +7.17%  -5.87%  -3.03% |   363   2.58   6.95 |          5.06%    31/7  
+BTC only (Model 0)        |  1.07 [-1.90,  7.34]   +0.00 [+0.00, +0.00] |  +3.93%  -3.03%  -3.03% |   254   1.82   6.95 |          3.14%    18/18 
+
+--- S multi: holdout detail ---
+  per-market P&L and capital:
+    BTC     pnl $   +24.48  trades   252  traded days  133  mean capital $  45.30
+    SPX     pnl $    +9.26  trades    22  traded days   20  mean capital $  31.94
+  correlation of daily market P&L (each pair over days both traded; n = shared days):
+    market          BTC          SPX
+    market                          
+    BTC     1.0 (n=133)  -0.3 (n=20)
+    SPX     -0.3 (n=20)   1.0 (n=20)
+  stress days (any market lost > 1% of bankroll): 5; by number of markets losing > 1% that day: 1 mkt x5
+--- S multi: full-history detail ---
+  per-market P&L and capital:
+    BTC     pnl $   +33.49  trades   400  traded days  237  mean capital $  42.64
+    SPX     pnl $    -5.81  trades    31  traded days   29  mean capital $  30.82
+  correlation of daily market P&L (each pair over days both traded; n = shared days):
+    market           BTC           SPX
+    market                            
+    BTC      1.0 (n=237)  -0.04 (n=27)
+    SPX     -0.04 (n=27)    1.0 (n=29)
+  stress days (any market lost > 1% of bankroll): 9; by number of markets losing > 1% that day: 1 mkt x9
+  all-markets assumed worst case: max 4.02%, mean on traded days 3.07%; realized max 4.02%
+
+--- P multi: holdout detail ---
+  per-market P&L and capital:
+    BTC     pnl $   +24.13  trades   289  traded days  133  mean capital $  41.83
+    SPX     pnl $   +35.70  trades    72  traded days   63  mean capital $  31.51
+  correlation of daily market P&L (each pair over days both traded; n = shared days):
+    market           BTC           SPX
+    market                            
+    BTC      1.0 (n=133)  -0.02 (n=63)
+    SPX     -0.02 (n=63)    1.0 (n=63)
+  stress days (any market lost > 1% of bankroll): 7; by number of markets losing > 1% that day: 1 mkt x7
+--- P multi: full-history detail ---
+  per-market P&L and capital:
+    BTC     pnl $   +95.60  trades   646  traded days  377  mean capital $  35.34
+    SPX     pnl $  +125.30  trades   207  traded days  164  mean capital $  33.86
+  correlation of daily market P&L (each pair over days both traded; n = shared days):
+    market            BTC            SPX
+    market                              
+    BTC       1.0 (n=377)  -0.01 (n=152)
+    SPX     -0.01 (n=152)    1.0 (n=164)
+  stress days (any market lost > 1% of bankroll): 13; by number of markets losing > 1% that day: 1 mkt x13
+  all-markets assumed worst case: max 4.03%, mean on traded days 3.35%; realized max 4.08%
+
+Notes: S, P, option 1 and the k runs were all fixed before running; several are compared, so one beating BTC-only on the holdout is weak evidence on its own.
+Outputs in output/gate150
