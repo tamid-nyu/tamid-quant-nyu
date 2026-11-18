@@ -1,0 +1,70 @@
+Loaded 3387 settled contracts over 120 expiry days; spot 2026-02-27 -> 2026-10-15
+Building observations (garch refits every 14 days, this can take a minute)...
+  8989 observations, 120 expiry days; in-sample before 2026-08-28, out-of-sample from 2026-08-28
+Look-ahead check: scrambled all spot data after t at 8 timestamps -> 0 variance forecasts changed (must be 0)
+
+=== CALIBRATION at H=6h before expiry: does the model beat the market price? (Brier score, lower is better) ===
+  rv     normal n= 3151  market=0.0416  model=0.0427  (market - model = -11.2e-4, 95% CI -22.1, -0.9; >0 = model better)
+  rv     fhs    n= 3151  market=0.0416  model=0.0419  (market - model = -2.5e-4, 95% CI -14.4, +8.8; >0 = model better)
+  ewma   normal n= 3151  market=0.0416  model=0.0421  (market - model = -5.3e-4, 95% CI -14.5, +3.5; >0 = model better)
+  ewma   fhs    n= 3151  market=0.0416  model=0.0416  (market - model = +0.5e-4, 95% CI -9.4, +10.3; >0 = model better)
+  garch  normal n= 3151  market=0.0416  model=0.0430  (market - model = -13.9e-4, 95% CI -27.0, -1.8; >0 = model better)
+  garch  fhs    n= 3151  market=0.0416  model=0.0418  (market - model = -1.5e-4, 95% CI -12.7, +8.8; >0 = model better)
+
+  Reliability table (ewma/fhs): market price vs model vs what actually happened
+                n  mkt_price  model_p  realized
+bin                                            
+[0.0, 0.02)   741      0.009    0.006     0.004
+[0.02, 0.05)  317      0.030    0.026     0.013
+[0.05, 0.1)   141      0.073    0.063     0.043
+[0.1, 0.2)    141      0.146    0.115     0.057
+[0.2, 0.35)   130      0.269    0.229     0.231
+[0.35, 0.5)   103      0.420    0.401     0.456
+[0.5, 0.65)   115      0.576    0.596     0.678
+[0.65, 0.8)   130      0.735    0.766     0.777
+[0.8, 0.9)    131      0.857    0.878     0.939
+[0.9, 0.95)   142      0.928    0.932     0.986
+[0.95, 0.98)  301      0.969    0.973     0.997
+[0.98, 1.0)   759      0.990    0.995     1.000
+
+=== PRIMARY: H=6h, edge>4c, model=ewma/fhs, fill at +1h bid/ask, Kalshi fee 0.07, hedge 5bps ===
+  ALL                            n= 386 days= 91 win=62% unhedged: mean=+2.19c sd=29.4c [95% CI -1.06, +5.58] | hedged: mean=-5.58c sd=22.7c [-9.12, -2.50]
+    in-sample                    n= 197 days= 56 win=60% unhedged: mean=-0.79c sd=31.9c [95% CI -4.40, +3.06] | hedged: mean=-7.86c sd=25.6c [-14.18, -2.92]
+    out-of-sample                n= 189 days= 35 win=63% unhedged: mean=+5.30c sd=26.3c [95% CI +0.18, +10.72] | hedged: mean=-3.21c sd=19.0c [-6.11, -0.13]
+    buy YES                      n= 176 days= 61 win=62% unhedged: mean=+2.13c sd=29.5c [95% CI -3.72, +7.60] | hedged: mean=-5.00c sd=22.7c [-9.27, -1.34]
+    sell YES                     n= 210 days= 81 win=61% unhedged: mean=+2.24c sd=29.5c [95% CI -2.73, +7.32] | hedged: mean=-6.07c sd=22.8c [-9.71, -2.80]
+    |ln(K/S)| in (0.0, 0.01]     n= 266 days= 89 win=60% unhedged: mean=+1.99c sd=33.9c [95% CI -2.24, +6.28] | hedged: mean=-6.47c sd=25.1c [-10.89, -2.62]
+    |ln(K/S)| in (0.01, 0.02]    n= 103 days= 50 win=68% unhedged: mean=+3.03c sd=17.0c [95% CI -0.87, +6.77] | hedged: mean=-3.94c sd=17.5c [-8.37, +0.21]
+    |ln(K/S)| in (0.02, 0.04]    n=  17 days=  7 win=47% unhedged: mean=+0.27c sd=4.0c [95% CI -2.17, +3.40] | hedged: mean=-1.77c sd=4.9c [-3.49, +0.48]
+    |ln(K/S)| in (0.04, 1.0]     no trades
+  mean gross edge captured +3.07c, fee 0.88c, hedge pnl -2.705c, hedge cost 5.072c per contract
+  hedge changes P&L std from 29.4c to 22.7c per contract
+
+=== SENSITIVITY: mean net cents per contract, unhedged / hedged, [trades] (primary model) ===
+edge \ H       3h                      6h                     12h                     
+   2c         -3.75/ -6.44 [ 384]   +2.21/ -4.27 [ 705]   -4.63/ -8.55 [ 929]  
+   4c         -5.31/ -6.45 [ 171]   +2.19/ -5.58 [ 386]   -6.06/-10.13 [ 562]  
+   6c        -10.24/ -8.73 [  94]   +2.39/ -5.08 [ 206]   -4.59/-11.14 [ 337]  
+  10c         -5.55/ -0.41 [  25]   +4.08/ +0.52 [  47]  -10.05/ -8.77 [  99]  
+
+By volatility model / distribution (H and edge at primary):
+    rv/normal                    n= 460 days= 83 win=45% unhedged: mean=-1.47c sd=24.8c [95% CI -4.27, +1.27] | hedged: mean=-6.76c sd=20.6c [-9.49, -4.21]
+    rv/fhs                       n= 529 days=100 win=62% unhedged: mean=+2.66c sd=28.5c [95% CI -0.27, +5.66] | hedged: mean=-4.46c sd=22.3c [-7.19, -2.02]
+    ewma/normal                  n= 312 days= 66 win=51% unhedged: mean=+0.10c sd=25.9c [95% CI -3.28, +3.46] | hedged: mean=-5.77c sd=19.4c [-8.48, -3.29]
+    ewma/fhs                     n= 386 days= 91 win=62% unhedged: mean=+2.19c sd=29.4c [95% CI -1.06, +5.58] | hedged: mean=-5.58c sd=22.7c [-9.12, -2.50]
+    garch/normal                 n= 377 days= 80 win=25% unhedged: mean=-5.07c sd=26.2c [95% CI -8.38, -1.36] | hedged: mean=-8.17c sd=19.3c [-10.24, -5.93]
+    garch/fhs                    n= 295 days= 73 win=52% unhedged: mean=-0.35c sd=27.4c [95% CI -5.12, +4.68] | hedged: mean=-5.42c sd=20.2c [-8.30, -2.66]
+
+Fee multiplier at primary (0 = no Kalshi fee):
+  fee x0: mean net +3.07c over 386 trades
+  fee x1: mean net +2.19c over 386 trades
+  fee x2: mean net +1.31c over 386 trades
+
+Hedge cost sensitivity (primary trades): the hedge holds about $51 of BTC per $1 contract
+  hedge cost    0bps: hedged mean net -0.51c (sd 21.4c) vs unhedged +2.19c (sd 29.4c)
+  hedge cost    2bps: hedged mean net -2.54c (sd 21.8c) vs unhedged +2.19c (sd 29.4c)
+  hedge cost    5bps: hedged mean net -5.58c (sd 22.7c) vs unhedged +2.19c (sd 29.4c)
+  hedge cost   10bps: hedged mean net -10.66c (sd 25.0c) vs unhedged +2.19c (sd 29.4c)
+
+Plot saved: /sessions/rcw-01rzvmjkvgnb1fd5tuecadr2/mnt/tamid/tamid-quant-nyu/backtests/output/btc_pm_results/btc_backtest.png
+Outputs in /sessions/rcw-01rzvmjkvgnb1fd5tuecadr2/mnt/tamid/tamid-quant-nyu/backtests/output/btc_pm_results

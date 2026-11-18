@@ -1,0 +1,91 @@
+Multi-market tail strategy: markets BTC, SPX, GOLD, WTI, NATGAS; 71979 observations, 816 days (2024-07-05 -> 2026-11-11)
+bankroll $1,000; per-market cap c = 3.0%, k = 2, k-worst cap C = 4.0%; Sharpe = mean/sd of daily returns x sqrt(365), days without trades count as 0
+obs per market: BTC 36093 (2024-07-05 -> 2026-11-11), SPX 16592 (2025-02-18 -> 2026-11-11), GOLD 7185 (2026-03-24 -> 2026-11-11), NATGAS 6589 (2026-04-15 -> 2026-11-10), WTI 5520 (2026-05-18 -> 2026-11-10)
+
+=== CHECK PERIOD 2026-01-01 -> 2026-06-30 ===
+model                     | Sharpe [95% CI]          diff vs BTC [95% CI]   | return  maxDD  worst | trades wins/d days/wk | max all-mkt worst  breaches c/C
+S multi                   | -0.19 [-2.39,  4.08]   -0.48 [-6.38, +0.66] |  -0.84%  -5.40%  -3.01% |   155   0.83   4.02 |          4.00%     6/0  
+P multi                   |  3.86 [ 1.26,  8.27]   +3.57 [-4.60, +7.48] | +17.84%  -2.92%  -2.92% |   419   2.26   6.07 |          6.98%    17/4  
+option 1 (S, total 6%)    | -0.09 [-2.32,  4.22]   -0.38 [-6.21, +0.75] |  -0.40%  -5.40%  -3.01% |   155   0.83   4.02 |          5.95%     6/0  
+S k=1 C=3%                | -0.09 [-2.32,  4.22]   -0.38 [-6.21, +0.75] |  -0.40%  -5.40%  -3.01% |   155   0.83   4.02 |          5.95%     6/6  
+P k=1 C=3%                |  4.49 [ 1.73,  8.23]   +4.20 [-4.65, +7.97] | +25.19%  -2.92%  -2.92% |   406   2.19   6.07 |         11.86%    24/24 
+S k=3 C=5%                | -0.14 [-2.36,  4.17]   -0.43 [-6.31, +0.72] |  -0.61%  -5.40%  -3.01% |   155   0.83   4.02 |          4.99%     6/0  
+P k=3 C=5%                |  4.42 [ 1.66,  8.83]   +4.13 [-3.59, +7.41] | +21.86%  -2.92%  -2.92% |   399   2.16   6.07 |          6.21%    17/5  
+BTC only (Model 0)        |  0.29 [-1.95, 10.11]   +0.00 [+0.00, +0.00] |  +1.11%  -5.45%  -3.01% |   146   0.78   3.94 |          3.05%     6/6  
+
+=== HOLDOUT (headline) 2026-07-01 -> 2026-11-11 ===
+model                     | Sharpe [95% CI]          diff vs BTC [95% CI]   | return  maxDD  worst | trades wins/d days/wk | max all-mkt worst  breaches c/C
+S multi                   |  1.66 [-1.53, 10.06]   +0.59 [-1.31, +3.14] |  +5.47%  -2.87%  -2.87% |   298   2.13   6.95 |          5.95%    17/3  
+P multi                   |  0.67 [-2.27,  5.46]   -0.40 [-6.73, +4.00] |  +3.79%  -7.25%  -3.57% |   635   4.55   7.00 |          7.51%    13/22 
+option 1 (S, total 6%)    |  0.72 [-2.24,  6.16]   -0.35 [-3.96, +1.55] |  +3.09%  -4.35%  -3.00% |   291   2.09   6.95 |          6.00%    22/1  
+S k=1 C=3%                |  0.68 [-2.29,  6.18]   -0.39 [-3.98, +1.46] |  +2.90%  -4.62%  -3.00% |   293   2.10   6.95 |         11.86%    25/25 
+P k=1 C=3%                |  1.91 [-1.25,  6.25]   +0.83 [-5.13, +4.66] | +13.72%  -6.59%  -3.02% |   551   3.97   7.00 |         14.87%    53/53 
+S k=3 C=5%                |  1.15 [-1.94,  7.03]   +0.08 [-2.85, +1.76] |  +4.26%  -3.31%  -2.87% |   295   2.10   6.95 |          5.38%    17/3  
+P k=3 C=5%                |  0.30 [-2.62,  4.60]   -0.77 [-6.93, +2.96] |  +1.88%  -8.96%  -4.41% |   476   3.37   7.00 |          6.92%    13/19 
+BTC only (Model 0)        |  1.07 [-1.90,  7.34]   +0.00 [+0.00, +0.00] |  +3.93%  -3.03%  -3.03% |   254   1.82   6.95 |          3.14%    18/18 
+
+--- S multi: holdout detail ---
+  per-market P&L and capital:
+    BTC     pnl $   +26.83  trades   248  traded days  133  mean capital $  40.19
+    NATGAS  pnl $    -2.08  trades     9  traded days    9  mean capital $  20.79
+    SPX     pnl $   +19.20  trades    22  traded days   20  mean capital $  25.24
+    WTI     pnl $   +10.77  trades    19  traded days   19  mean capital $  29.43
+  correlation of daily market P&L (each pair over days both traded; n = shared days):
+    market           BTC       NATGAS           SPX         WTI
+    market                                                     
+    BTC      1.0 (n=133)  -0.94 (n=9)  -0.09 (n=20)  0.2 (n=19)
+    NATGAS   -0.94 (n=9)    1.0 (n=9)     0.5 (n=3)   nan (n=2)
+    SPX     -0.09 (n=20)    0.5 (n=3)    1.0 (n=20)  0.27 (n=6)
+    WTI       0.2 (n=19)    nan (n=2)    0.27 (n=6)  1.0 (n=19)
+  stress days (any market lost > 1% of bankroll): 4; by number of markets losing > 1% that day: 1 mkt x4
+--- S multi: full-history detail ---
+  per-market P&L and capital:
+    BTC     pnl $   +35.84  trades   396  traded days  237  mean capital $  39.77
+    NATGAS  pnl $    -2.08  trades     9  traded days    9  mean capital $  20.79
+    SPX     pnl $    +4.13  trades    31  traded days   29  mean capital $  26.20
+    WTI     pnl $   +10.77  trades    19  traded days   19  mean capital $  29.43
+  correlation of daily market P&L (each pair over days both traded; n = shared days):
+    market          BTC       NATGAS          SPX         WTI
+    market                                                   
+    BTC     1.0 (n=237)  -0.94 (n=9)  0.09 (n=27)  0.2 (n=19)
+    NATGAS  -0.94 (n=9)    1.0 (n=9)    0.5 (n=3)   nan (n=2)
+    SPX     0.09 (n=27)    0.5 (n=3)   1.0 (n=29)  0.27 (n=6)
+    WTI      0.2 (n=19)    nan (n=2)   0.27 (n=6)  1.0 (n=19)
+  stress days (any market lost > 1% of bankroll): 8; by number of markets losing > 1% that day: 1 mkt x8
+  all-markets assumed worst case: max 5.95%, mean on traded days 3.19%; realized max 5.98%
+
+--- P multi: holdout detail ---
+  per-market P&L and capital:
+    BTC     pnl $   +23.70  trades   271  traded days  129  mean capital $  32.41
+    GOLD    pnl $   +10.57  trades    91  traded days   60  mean capital $  15.67
+    NATGAS  pnl $    -2.90  trades    57  traded days   39  mean capital $  13.64
+    SPX     pnl $   +26.29  trades    74  traded days   64  mean capital $  12.26
+    WTI     pnl $   -19.73  trades   142  traded days   92  mean capital $  45.52
+  correlation of daily market P&L (each pair over days both traded; n = shared days):
+    market           BTC          GOLD        NATGAS           SPX          WTI
+    market                                                                     
+    BTC      1.0 (n=129)  -0.01 (n=59)  -0.05 (n=39)  -0.04 (n=60)  -0.0 (n=87)
+    GOLD    -0.01 (n=59)    1.0 (n=60)    0.0 (n=34)  -0.03 (n=41)  0.03 (n=59)
+    NATGAS  -0.05 (n=39)    0.0 (n=34)    1.0 (n=39)   -0.1 (n=29)  0.02 (n=39)
+    SPX     -0.04 (n=60)  -0.03 (n=41)   -0.1 (n=29)    1.0 (n=64)  0.32 (n=63)
+    WTI      -0.0 (n=87)   0.03 (n=59)   0.02 (n=39)   0.32 (n=63)   1.0 (n=92)
+  stress days (any market lost > 1% of bankroll): 11; by number of markets losing > 1% that day: 1 mkt x11
+--- P multi: full-history detail ---
+  per-market P&L and capital:
+    BTC     pnl $   +91.94  trades   631  traded days  373  mean capital $  31.77
+    GOLD    pnl $    +9.87  trades   121  traded days   78  mean capital $  16.42
+    NATGAS  pnl $    +0.80  trades    66  traded days   48  mean capital $  13.05
+    SPX     pnl $  +126.14  trades   210  traded days  165  mean capital $  26.88
+    WTI     pnl $   -19.73  trades   142  traded days   92  mean capital $  45.52
+  correlation of daily market P&L (each pair over days both traded; n = shared days):
+    market           BTC          GOLD        NATGAS           SPX          WTI
+    market                                                                     
+    BTC      1.0 (n=373)  -0.13 (n=77)  -0.02 (n=48)  -0.0 (n=149)  -0.0 (n=87)
+    GOLD    -0.13 (n=77)    1.0 (n=78)  -0.02 (n=42)   0.22 (n=58)  0.03 (n=59)
+    NATGAS  -0.02 (n=48)  -0.02 (n=42)    1.0 (n=48)  -0.04 (n=37)  0.02 (n=39)
+    SPX     -0.0 (n=149)   0.22 (n=58)  -0.04 (n=37)   1.0 (n=165)  0.32 (n=63)
+    WTI      -0.0 (n=87)   0.03 (n=59)   0.02 (n=39)   0.32 (n=63)   1.0 (n=92)
+  stress days (any market lost > 1% of bankroll): 17; by number of markets losing > 1% that day: 1 mkt x17
+  all-markets assumed worst case: max 7.51%, mean on traded days 3.91%; realized max 7.51%
+
+Notes: S, P, option 1 and the k runs were all fixed before running; several are compared, so one beating BTC-only on the holdout is weak evidence on its own.
