@@ -1,0 +1,77 @@
+# Markets for the multi-market tail strategy.
+# Spec: strategies/kalshi-tails/docs/specs/2026-11-12-multi-market-tail-design.md (section 2)
+#
+# key:            short name used everywhere
+# group:          correlation group (reporting only)
+# series:         Kalshi series tickers, first with data for a day wins
+# event_suffix:   event ticker is SERIES-YYMONDD<suffix>, e.g. KXINXU-26SEP11H1600, KXGOLDD-26SEP1017
+# strike_rule:    gt (YES iff settlement > floor) or ge (YES iff settlement >= floor)
+# weekdays_only:  skip Saturdays and Sundays when pulling
+# band:           pull strikes within +/- this fraction of the previous expiry's settlement value
+# enabled:        part of the default trading set
+# session_hours:  trading hours per interval, used by predictor v2 to scale daily vol to H
+markets:
+  - key: BTC
+    group: crypto
+    series: [KXBTCD, BTCD]
+    event_suffix: "17"
+    strike_rule: gt
+    weekdays_only: false
+    band: 0.06
+    enabled: true
+    session_hours: 24
+    # BTC is not pulled again: observations come from strategies/kalshi-tails/btc-kalshi-digital/output/btc_pm_results_long/
+  - key: SPX
+    group: equity
+    series: [KXINXU]
+    event_suffix: H1600
+    strike_rule: ge
+    weekdays_only: true
+    band: 0.04
+    enabled: true
+    session_hours: 6.5
+  - key: GOLD
+    group: metals
+    series: [KXGOLDD]
+    event_suffix: "17"
+    strike_rule: gt
+    weekdays_only: true
+    band: 0.05
+    enabled: true
+    session_hours: 23
+  - key: WTI
+    group: crude
+    series: [KXWTI]
+    event_suffix: "14"
+    strike_rule: gt
+    weekdays_only: true
+    band: 0.10
+    enabled: true
+    session_hours: 23
+  - key: NATGAS
+    group: gas
+    series: [KXNATGASD]
+    event_suffix: "17"
+    strike_rule: gt
+    weekdays_only: true
+    band: 0.15
+    enabled: true
+    session_hours: 23
+  - key: NDX
+    group: equity
+    series: [KXNASDAQ100U]
+    event_suffix: H1600
+    strike_rule: ge
+    weekdays_only: true
+    band: 0.05
+    enabled: false
+    session_hours: 6.5
+  - key: SILVER
+    group: metals
+    series: [KXSILVERD]
+    event_suffix: "17"
+    strike_rule: gt
+    weekdays_only: true
+    band: 0.08
+    enabled: false
+    session_hours: 23

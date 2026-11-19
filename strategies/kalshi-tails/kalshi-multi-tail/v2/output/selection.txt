@@ -1,0 +1,95 @@
+Predictor v2 selection (spec section 6), markets BTC + SPX
+walk-forward over expiry days 2024-07-05 -> 2026-06-30; scored days 2025-01-01 -> 2026-06-30
+common rows: dev rows where every v2 set has n >= 200 and v1 P has n >= 100; log-loss uses p clipped to [0.001, 0.999]
+SE = std of 4,000 moving-block bootstrap resamples (7-day blocks, seed 11), row-weighted delta inside each
+
+Row counts per market (live = warm tail candidates on scored days)
+  market      live  common  S subset
+  BTC         5565    4918      4655
+  SPX         2093    1911       354
+  total       7658    6829      5009
+
+Mean log-loss on common rows
+  all          n       F1       F2       F3        P      mid
+  all       6829  0.09197  0.09209  0.09177  0.09232  0.09950
+
+by market
+  market       n       F1       F2       F3        P      mid
+  BTC       4918  0.09065  0.09093  0.09064  0.09084  0.09827
+  SPX       1911  0.09538  0.09507  0.09468  0.09611  0.10265
+
+by H
+  H            n       F1       F2       F3        P      mid
+  3         2856  0.08613  0.08581  0.08542  0.08611  0.09376
+  6         3973  0.09618  0.09660  0.09634  0.09678  0.10362
+
+v1 S subset (common rows where v1 S's own cell n >= 100), labeled as that subset
+  all          n        S       F1       F2       F3        P      mid
+  all       5009  0.09225  0.09203  0.09229  0.09166  0.09250  0.09925
+  BTC       4655  0.09233  0.09196  0.09228  0.09189  0.09228  0.09946
+  SPX        354  0.09124  0.09292  0.09247  0.08865  0.09551  0.09651
+
+Paired delta = LL(a) - LL(b), same rows
+  pair                           delta        SE    d/SE
+  F2 - F1                     +0.00011   0.00038    0.30
+  F3 - F2                     -0.00031   0.00036   -0.86
+  F3 - F1                     -0.00020   0.00051   -0.39
+  F1 - P                      -0.00034   0.00075   -0.46
+  F2 - P                      -0.00023   0.00087   -0.26
+  F3 - P                      -0.00054   0.00093   -0.58
+  F1 - mid                    -0.00752   0.00151   -4.97
+  F2 - mid                    -0.00741   0.00158   -4.69
+  F3 - mid                    -0.00772   0.00151   -5.12
+  P - mid                     -0.00718   0.00196   -3.66
+  F1 - S (S subset)           -0.00022   0.00063   -0.34
+  F2 - S (S subset)           +0.00004   0.00086    0.05
+  F3 - S (S subset)           -0.00059   0.00083   -0.71
+  P - S (S subset)            +0.00026   0.00078    0.33
+
+Selection (step 4): lowest log-loss; simplest set within 1 SE of the best on the paired delta
+  set           LL  delta vs best        SE  within 1 SE
+  F1       0.09197       +0.00020   0.00051  yes
+  F2       0.09209       +0.00031   0.00036  yes
+  F3       0.09177       +0.00000   0.00000  yes
+CHOSEN SET: F1
+
+Reliability on common rows (report only)
+low tail (mid < 0.10): 10 equal-width mid bins; realized YES rate vs mean clipped p
+  mid bin            n       y      F1      F2      F3       P     mid
+  [0.000,0.010)     0
+  [0.010,0.020)   311  0.0064  0.0063  0.0064  0.0065  0.0043  0.0150
+  [0.020,0.030)   690  0.0072  0.0109  0.0109  0.0110  0.0076  0.0239
+  [0.030,0.040)   772  0.0078  0.0158  0.0153  0.0154  0.0109  0.0327
+  [0.040,0.050)   438  0.0137  0.0208  0.0208  0.0208  0.0195  0.0426
+  [0.050,0.060)   335  0.0328  0.0264  0.0264  0.0267  0.0339  0.0528
+  [0.060,0.070)   241  0.0290  0.0320  0.0320  0.0320  0.0334  0.0624
+  [0.070,0.080)   188  0.0532  0.0376  0.0374  0.0373  0.0471  0.0728
+  [0.080,0.090)   171  0.0468  0.0443  0.0439  0.0446  0.0597  0.0826
+  [0.090,0.100)   137  0.0584  0.0503  0.0496  0.0494  0.0593  0.0926
+high tail (mid > 0.90): 10 equal-width mid bins; realized YES rate vs mean clipped p
+  mid bin            n       y      F1      F2      F3       P     mid
+  [0.900,0.910)    80  0.9625  0.9268  0.9276  0.9282  0.9158  0.9050
+  [0.910,0.920)   154  0.9286  0.9356  0.9350  0.9347  0.9194  0.9128
+  [0.920,0.930)   193  0.9585  0.9440  0.9438  0.9436  0.9355  0.9230
+  [0.930,0.940)   387  0.9561  0.9549  0.9546  0.9549  0.9458  0.9352
+  [0.940,0.950)   179  0.9553  0.9643  0.9642  0.9645  0.9476  0.9450
+  [0.950,0.960)   443  0.9887  0.9705  0.9697  0.9701  0.9729  0.9530
+  [0.960,0.970)   754  0.9788  0.9780  0.9774  0.9775  0.9818  0.9630
+  [0.970,0.980)   930  0.9957  0.9862  0.9861  0.9861  0.9920  0.9728
+  [0.980,0.990)   426  1.0000  0.9930  0.9932  0.9932  0.9970  0.9824
+  [0.990,1.000)     0
+
+Max condition number of the standardized design matrix over all fits
+  F1: 22.65
+  F2: 22.70
+  F3: 22.73
+  max: 22.73
+
+Would-trade secondary (report only): common rows where v2 or v1 P would trade (net edge >= 0.005 after slip 0.02 and fees, by best_side, valid fill quote)
+  v2 set    rows   delta_P        SE        v2 n/pnl         P n/pnl
+  F1        1077  +0.00179   0.00360    177 $  +1.97    959 $  +3.71
+  F2        1115  +0.00245   0.00386    250 $  +3.88    959 $  +3.71
+  F3        1146  +0.00212   0.00392    295 $  +3.87    959 $  +3.71
+  one-contract P&L at the fill quote, fee rounded up to the cent
+
+runtime 5s

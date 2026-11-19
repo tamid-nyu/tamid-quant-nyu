@@ -1,0 +1,105 @@
+HOLDOUT: seen period, not the verdict
+Predictor v3 holdout evaluation (spec section 7), run once right after the freeze (w = 0.5). Both components' holdout results were already published (v1 and v2 READMEs).
+Frozen v3: {'w': 0.5} (f = w * f_P + (1 - w) * f_F1, clipped to [0.001, 0.999]); P = PooledEstimator(n0=50, n1=100); F1 = {'set': 'F1', 'lam_beta': 25, 'lam_alpha': 25, 'refit_days': 7, 'min_rows': 200}
+scored expiry days 2026-07-01 -> 2026-11-11; walk-forward over all rows from 2024-07-05 up to 2026-11-11
+common rows: period rows where v1 P has n >= 100, v2 F1 has n >= 200 and v3 is eligible; log-loss uses p clipped to [0.001, 0.999]
+bootstrap: 4,000 moving-block resamples (7-day blocks, seed 11), row-weighted delta inside each
+
+=== PRIMARY: BTC + SPX ===
+Row counts per market (live = warm tail candidates on the period's days)
+  market      live  common  days
+  BTC         2593    2593   133
+  SPX         1562    1562    94
+  total       4155    4155   134
+
+Mean log-loss on common rows (V3 = blend w = 0.5, P = v1 pooled, F1 = v2 set F1)
+  all          n       V3        P       F1      mid
+  all       4155  0.08269  0.08504  0.08207  0.08932
+
+by market
+  market       n       V3        P       F1      mid
+  BTC       2593  0.05775  0.05912  0.05771  0.06699
+  SPX       1562  0.12410  0.12806  0.12252  0.12638
+
+by H
+  H            n       V3        P       F1      mid
+  3         1912  0.08203  0.08406  0.08150  0.08694
+  6         2243  0.08326  0.08586  0.08256  0.09134
+
+Paired delta = LL(a) - LL(b), same rows; one-sided test passes iff the bootstrap 95th pct < 0
+  pair            rows  days      delta        SE   95th pct  p95 < 0
+  V3 - P          4155   134   -0.00234   0.00123   -0.00061  yes
+  V3 - F1         4155   134   +0.00062   0.00074   +0.00197  no
+  V3 - mid        4155   134   -0.00663   0.00402   +0.00042  no
+  F1 - P          4155   134   -0.00296   0.00195   -0.00025  yes
+  P - mid         4155   134   -0.00428   0.00506   +0.00463  no
+  F1 - mid        4155   134   -0.00724   0.00350   -0.00116  yes
+
+Minimum detectable effect for a 181-day forward window: SE_h = std of the bootstrap delta, D = distinct days,
+SE_181 = SE_h * sqrt(D / 181), MDE = 2.5 * SE_181; per-day SD = SD of the per-day mean delta (information only)
+  comparator        D      SE_h    SE_181       MDE  per-day SD
+  V3 - P          134   0.00123   0.00106   0.00264     0.01343
+  V3 - F1         134   0.00074   0.00064   0.00159     0.00725
+
+Would-trade secondary (report only): common rows where v3, v1 P or v2 F1 would trade (net edge >= 0.005 after slip 0.02 and fees, by best_side, valid fill quote)
+    rows  days    delta_P   95th pct   delta_F1   95th pct         v3 n/pnl          P n/pnl         F1 n/pnl
+    1299   133   -0.00445   -0.00018   +0.00082   +0.00338     642 $  +2.13    1170 $  +0.80     223 $  +1.15
+  one-contract P&L at the fill quote, fee rounded up to the cent
+
+Sharpe through the frozen sizer (multi_tail.run: c = 3%, k = 2, C = 4%, $1,000); daily returns on 134 period days, days without trades count as 0
+  model     Sharpe  95% CI             return  trades   wins  trades/day  wins/day
+  V3          3.62  [ 0.07, 11.26]    +14.14%     288    275        2.15      2.05
+  P           1.24  [-1.83,  6.57]     +5.98%     361    343        2.69      2.56
+  F1          2.51  [-0.80,  9.12]     +9.83%     158    150        1.18      1.12
+  Sharpe(V3) - Sharpe(P) = +2.37, 95% CI [-1.31, +8.23] (paired_diff_ci, same days)
+  Sharpe(V3) - Sharpe(F1) = +1.11, 95% CI [-3.81, +6.77] (paired_diff_ci, same days)
+
+=== EXPLORATORY: five markets (BTC + SPX + GOLD + WTI + NATGAS), no decision attached ===
+Row counts per market (live = warm tail candidates on the period's days)
+  market      live  common  days
+  BTC         2593    2593   133
+  GOLD        1137    1137    76
+  NATGAS      1193    1193    72
+  SPX         1562    1562    94
+  WTI         1606    1606    92
+  total       8091    8091   134
+
+Mean log-loss on common rows (V3 = blend w = 0.5, P = v1 pooled, F1 = v2 set F1)
+  all          n       V3        P       F1      mid
+  all       8091  0.10389  0.10551  0.10385  0.10733
+
+by market
+  market       n       V3        P       F1      mid
+  BTC       2593  0.05790  0.05924  0.05794  0.06699
+  GOLD      1137  0.09363  0.09463  0.09420  0.09933
+  NATGAS    1193  0.15415  0.15541  0.15462  0.15303
+  SPX       1562  0.12348  0.12707  0.12192  0.12638
+  WTI       1606  0.12903  0.12987  0.12951  0.12563
+
+by H
+  H            n       V3        P       F1      mid
+  3         3704  0.11275  0.11411  0.11314  0.11392
+  6         4387  0.09641  0.09824  0.09601  0.10176
+
+Paired delta = LL(a) - LL(b), same rows; one-sided test passes iff the bootstrap 95th pct < 0
+  pair            rows  days      delta        SE   95th pct  p95 < 0
+  V3 - P          8091   134   -0.00162   0.00073   -0.00049  yes
+  V3 - F1         8091   134   +0.00004   0.00050   +0.00088  no
+  V3 - mid        8091   134   -0.00344   0.00305   +0.00188  no
+  F1 - P          8091   134   -0.00166   0.00120   +0.00024  no
+  P - mid         8091   134   -0.00182   0.00361   +0.00444  no
+  F1 - mid        8091   134   -0.00348   0.00287   +0.00155  no
+
+Would-trade secondary (report only): common rows where v3, v1 P or v2 F1 would trade (net edge >= 0.005 after slip 0.02 and fees, by best_side, valid fill quote)
+    rows  days    delta_P   95th pct   delta_F1   95th pct         v3 n/pnl          P n/pnl         F1 n/pnl
+    2125   134   -0.00330   -0.00013   +0.00048   +0.00227     911 $  +3.95    1871 $  +3.63     499 $  -0.84
+  one-contract P&L at the fill quote, fee rounded up to the cent
+
+Sharpe through the frozen sizer (multi_tail.run: c = 3%, k = 2, C = 4%, $1,000); daily returns on 134 period days, days without trades count as 0
+  model     Sharpe  95% CI             return  trades   wins  trades/day  wins/day
+  V3          1.75  [-1.40,  7.12]     +8.67%     470    446        3.51      3.33
+  P           0.67  [-2.27,  5.46]     +3.79%     635    610        4.74      4.55
+  F1          1.58  [-1.46,  6.47]     +8.14%     303    280        2.26      2.09
+  Sharpe(V3) - Sharpe(P) = +1.08, 95% CI [-1.66, +4.29] (paired_diff_ci, same days)
+  Sharpe(V3) - Sharpe(F1) = +0.17, 95% CI [-2.36, +3.31] (paired_diff_ci, same days)
+

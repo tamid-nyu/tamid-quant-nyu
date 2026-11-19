@@ -1,6 +1,11 @@
 __pycache__/
 *.pyc
-strategies/btc-kalshi-digital/output/btc_pm/
-strategies/kalshi-multi-tail/output/raw/
-strategies/kalshi-multi-tail/output/obs/
+strategies/kalshi-tails/btc-kalshi-digital/output/btc_pm/
+strategies/kalshi-tails/kalshi-multi-tail/output/raw/
+strategies/kalshi-tails/kalshi-multi-tail/output/obs/
 .pytest_cache/
+strategies/kalshi-tails/kalshi-multi-tail/v2/output/features/
+strategies/kalshi-tails/kalshi-multi-tail/v2/output/preds/
+strategies/kalshi-tails/kalshi-multi-tail/v2/output/sim/
+strategies/kalshi-tails/kalshi-multi-tail/v3/output/preds/
+strategies/kalshi-tails/kalshi-multi-tail/v3/output/sim/
